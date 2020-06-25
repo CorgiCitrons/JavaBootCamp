@@ -7,6 +7,8 @@ public class TryCatchFinallySample {
 	
 	public static void main(String[] args) {
 		//1 - Create an instance of TryCatchFinallySample and call catchMeIfYouCan()
+		TryCatchFinallySample obj = new TryCatchFinallySample();
+		obj.catchMeIfYouCan();
 		
 	}
 	
@@ -14,6 +16,9 @@ public class TryCatchFinallySample {
 	{
 		//As long as we try to print it, it'd work and print null.		
 		System.out.println(str);
+		str = "Intelligent student";
+		int temp1 = 0;
+		int temp2 = 10;
 		
 		//However, when we try to execute any operations on it, it'd throw a NullPointerException 
 		//Uncomment the following line and then run to see what happens.
@@ -24,9 +29,17 @@ public class TryCatchFinallySample {
 		//Lets see how do we handle this
 		//2 - put the above print statement inside a try catch block 
 		
-		
-		
-		
+		try {
+			System.out.println(str.toUpperCase());
+			System.out.println(temp1/temp2);
+
+		} catch (NullPointerException e) {
+	System.out.println ("A variable is not initialized");
+		}catch (ArithmeticException e) {
+			System.out.println ("I can not perform division operation if dividing by 0");
+		}finally {
+			System.out.println("Nothing wrong has happend while executing the code");
+		}
 	}
-	
 }
+
