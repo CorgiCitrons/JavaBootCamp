@@ -9,9 +9,8 @@ public class TryCatchFinallySample {
 		//1 - Create an instance of TryCatchFinallySample and call catchMeIfYouCan()
 		TryCatchFinallySample obj = new TryCatchFinallySample();
 		obj.catchMeIfYouCan();
-		
 	}
-	
+	public void catchMe() {}
 	public void catchMeIfYouCan()
 	{
 		//As long as we try to print it, it'd work and print null.		
