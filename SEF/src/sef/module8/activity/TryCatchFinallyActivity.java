@@ -19,9 +19,7 @@ void catchMeIfYouCan()
 		System.out.println(arr[i]);
 	}		
 	catch (ArrayIndexOutOfBoundsException e) {
-		System.out.println ("Array missing");
-	}
+		System.out.println ("Array missing");	}
 	}
 }
 }
-
