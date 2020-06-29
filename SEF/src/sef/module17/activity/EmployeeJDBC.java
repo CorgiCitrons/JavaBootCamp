@@ -8,44 +8,87 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class EmployeeJDBC {
-
-	public Connection createConnection()
-	{
-		Connection con=null;
-		String url = "jdbc:mysql://localhost/activity";
-		String user = "root";
-		String pass = "adbd1234";
-
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection(url, user, pass);
-			System.out.println("Connection successfully established!");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return con;
-	}
 	
-	public Employee findEmployeeById(String id)
+	
+	
+	public static void main(String arg[]) {
+		Connection con = createConnection();
+		System.out.println(con);
+			
+	// insert employee
+		
+//	Employee e1 = new Employee();
+//	e1.setId("11");
+//	e1.setFirstName("Elina");
+//	e1.setLastName("Sala");
+//	e1.setSalary(3000);
+////	
+//	insertEmployee(e1);
+//	
+//	Employee e2 = new Employee();
+//	e2.setId("33");
+//	e2.setFirstName("Citrons");
+//	e2.setLastName("Corgi");
+//	e2.setSalary(2700);
+////	
+//	insertEmployee(e2);
+
+//	 get employee
+		Employee e1 = new Employee();
+		e1 = findEmployeeById("11");
+		System.out.println(e1.getFirstName());
+//		
+//	// get employee by name
+//	
+	
+	}
+		public static Connection createConnection()	
+		
+		{
+			Connection con=null;
+			String url = "jdbc:mysql://localhost/activity?serverTimezone=UTC";
+	
+			String user = "root";
+			String pass = "corgi";
+
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				con = DriverManager.getConnection(url, user, pass);
+				System.out.println("Connection successfully established!");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return con; }
+	
+	
+	public static Employee findEmployeeById(String id)
 	{
 		Connection con = createConnection();
 		Employee emp=null;
 		try {
-		// 1 - Create a PreparedStatement with a query
+//		// 1 - Create a PreparedStatement with a query
+		PreparedStatement pStmt = con.prepareStatement("select * from employee where id = ?");
 		
-
-		// 2 - Search for the given id
+//		// 2 - Search for the given id
+		pStmt.setString(1,  id);
 		
-
-		// 3 - Execute this query
+//		// 3 - Execute this query
+		ResultSet rs = pStmt.executeQuery();
 		
-		
-		// 4 - If resultset is not null, then initialize emp object with data 
+//		// 4 - If resultset is not null, then initialize emp object with data
+		if(rs.next())
+		{
+			emp=new Employee();
+			emp.setId(rs.getString(1));
+			emp.setFirstName(rs.getString(2));
+			emp.setLastName(rs.getString(3));
+			emp.setSalary(Integer.parseInt(rs.getString(4)));		
+		}
 		
 		con.close();
 		} catch (SQLException e) {
@@ -62,17 +105,30 @@ public class EmployeeJDBC {
 		ArrayList<Employee> list = new ArrayList<Employee>();
 		
 		try {
-		// 1 - Create a PreparedStatement with a query
-		
-
-		// 2 - Search for the given id
-		
-		// 3 - Execute this query
-		
-		
-		// 4 - While there are some records, continue 
-		
+//		// 1 - Create a PreparedStatement with a query
+			PreparedStatement pStmt = con.prepareStatement("select * from employee where firstName like ? or lastName like ?");
+			
+//		// 2 - Search for the given id
+			pStmt.setString(1,  "%"+name+"%");
+			pStmt.setString(2,  "%"+name+"%");
+			
+//		// 3 - Execute this query
+			ResultSet rs = pStmt.executeQuery();
+			
+//		// 4 - While there are some records, continue 
+			while(rs.next())
+			{
+				Employee emp=new Employee();
+				emp.setId(rs.getString(1));
+				emp.setFirstName(rs.getString(2));
+				emp.setLastName(rs.getString(3));
+				emp.setSalary(Integer.parseInt(rs.getString(4)));	
+				
+				list.add(emp);
+			}
+			
 			con.close();
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -80,24 +136,37 @@ public class EmployeeJDBC {
 		
 		return list;
 	}
-
+//
 	public ArrayList<Employee> findEmployeesBySalary(int salary)
 	{
 		Connection con = createConnection();
 		ArrayList<Employee> list = new ArrayList<Employee>();
 		
 		try {
-		// 1 - Create a PreparedStatement with a query
-		
-
-		// 2 - Search for the given salary
-		
-
-		// 3 - Execute this query
-
-		
-		// 4 - While there are records, continue 
-
+//		// 1 - Create a PreparedStatement with a query
+			PreparedStatement pStmt = con.prepareStatement("select * from employee where salary = ?");
+			
+//		// 2 - Search for the given salary
+			pStmt.setInt(1, salary);
+	
+//		// 3 - Execute this query
+			ResultSet rs = pStmt.executeQuery();
+			
+//		setString
+//		// 4 - While there are records, continue
+			while(rs.next())
+			{
+				Employee emp=new Employee();
+				emp.setId(rs.getString(1));
+				emp.setFirstName(rs.getString(2));
+				emp.setLastName(rs.getString(3));
+				emp.setSalary(Integer.parseInt(rs.getString(4)));	
+				
+				list.add(emp);
+			}
+			
+			con.close();
+			
 		con.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -106,28 +175,35 @@ public class EmployeeJDBC {
 		
 		return list;
 	}
-
-	public void insertEmployee(Employee emp)
-	{
-		Connection con = createConnection();
-		
-		//1 - Create a PreparedStatement with a query "insert into employee values(?,?,?,?)" 
-		
-		con.setAutoCommit(false);
-
-		//	Substitute the ? now.
-		
-		//2 - Execute this query using executeUpdate()
+////
+public static void insertEmployee(Employee emp)
+{
+	Connection con = createConnection();
+//		
+////		//1 - Create a PreparedStatement with a query "insert into employee values(?,?,?,?)" 
+////		
+			try{
+			PreparedStatement pStmt = con.prepareStatement ("insert into employee values(?,?,?,?)");
 			
+		con.setAutoCommit(false);
+	
+			//	Substitute the ? now.
+		pStmt.setString(1, emp.getId());
+		pStmt.setString(2, emp.getFirstName());
+		pStmt.setString(3, emp.getLastName());
+		pStmt.setInt(4, emp.getSalary());
+//
+//		//2 - Execute this query using executeUpdate()
+			int rows = pStmt.executeUpdate();
 		System.out.println(rows + " row(s) added!");
 		con.commit();
 		con.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+//			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 
 	}
 
-}
+} 
